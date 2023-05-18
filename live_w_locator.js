@@ -88,9 +88,9 @@ $(function() {
             return Quagga.CameraAccess.enumerateVideoDevices()
             .then(function(devices) {
                 function pruneText(text) {
-                    console.log('打印检测到的字符：',text)
+                    // console.log('打印检测到的字符：',text)
                     if (undefined != text){
-                        console.log('打印检测到的字符2：',text)
+                        // console.log('打印检测到的字符2：',text)
                         return text.length > 30 ? text.substr(0, 30) : text;
                         }
                     return '123啥也没有'
@@ -109,9 +109,9 @@ $(function() {
             });
         },
         attachListeners: function() {
-            var self = this;
-
+            const self = this;
             self.initCameraSelection();
+
             $(".controls").on("click", "button.stop", function(e) {
                 e.preventDefault();
                 Quagga.stop();
@@ -119,6 +119,7 @@ $(function() {
             });
 
             $(".controls .reader-config-group").on("change", "input, select", function(e) {
+                console.log("监听到模式的改变：",e.target)
                 e.preventDefault();
                 var $target = $(e.target),
                     value = $target.attr("type") === "checkbox" ? $target.prop("checked") : $target.val(),
@@ -215,6 +216,7 @@ $(function() {
             },
             decoder: {
                 readers: function(value) {
+
                     if (value === 'ean_extended') {
                         return [{
                             format: "ean_reader",
@@ -260,42 +262,94 @@ $(function() {
     };
 
     App.init();
-
+    var shi_bie_times = 1;
+    var detected_result_code = new Array();
+    var detected_all_result = {};
     Quagga.onProcessed(function(result) {
+        // console.log('本次Processed识别的条码结果为：',result,"当前识别次数：",shi_bie_times)
+        shi_bie_times +=1
         var drawingCtx = Quagga.canvas.ctx.overlay,
             drawingCanvas = Quagga.canvas.dom.overlay;
 
         if (result) {
             if (result.boxes) {
+                // 大致探测范围 当前还未标出最终识别区域的范围
+                // console.log("探测到可能的区域了")
                 drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
                 result.boxes.filter(function (box) {
                     return box !== result.box;
                 }).forEach(function (box) {
                     Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, {color: "green", lineWidth: 2});
+
                 });
+                if (shi_bie_times > 5){
+                    // 本轮探测次数已经大于5次
+                    if (result.box) {
+                    // 标出最终识别区域的范围
+                        console.log("探测到---最终----的区域了,当前轮次探测次数为：",shi_bie_times)
+
+
+                    }else{
+                        // console.log("本轮探测次数已经大于5次，但 没有 探测到最终的区域,当前轮次探测次数为：",shi_bie_times ,'请尝试更换探测模式')
+                        var gd2=document.getElementById("select_id");
+
+                        //为防止有时指定id元素不存在导致的异常
+                        // if(gd2)
+                        // { 
+                           // gd2.value='ean'; //更改选定项，值为select选项中原有值（即换一个选择项）
+   
+                            // App.attachListeners();
+                            // App.checkCapabilities();
+                            // Quagga.start();
+                        // }
+                    }
+                    shi_bie_times = 1
+                }
+                
+
             }
 
             if (result.box) {
-                Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "#00F", lineWidth: 2});
+                // 标出最终识别区域的范围
+                // console.log("探测到---最终----的区域了2")
+                Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "blue", lineWidth: 2});
+            }
+
+            if (result.codeResult) {
+                // console.log('本次Processed识别的条码结果2为：',result.codeResult.code,"当前识别次数：",shi_bie_times)
+                // shi_bie_times +=1
             }
 
             if (result.codeResult && result.codeResult.code) {
+                // console.log('本次Processed识别的条码结果3为：',result.codeResult.code,"当前识别次数：",shi_bie_times)
+                shi_bie_times +=1
+                detected_result_code.push(result.codeResult.code)
                 Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx, {color: 'red', lineWidth: 3});
             }
         }
     });
-
+    
+    // 控制一下正确率 当同一个码被识别出right_count_level 次才被添加
+    var right_count_level = 5
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
 
-        if (App.lastResult !== code) {
-            App.lastResult = code;
-            var $node = null, canvas = Quagga.canvas.dom.image;
+        if (undefined == detected_all_result[code]){
+            console.log(222,undefined == detected_all_result[code],detected_all_result[code])
+            detected_all_result[code] = 1   
 
-            $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
-            $node.find("img").attr("src", canvas.toDataURL());
-            $node.find("h4.code").html(code);
-            $("#result_strip ul.thumbnails").prepend($node);
+        }else{
+            detected_all_result[code] = detected_all_result[code]+1
+            console.log('当前情况：',code,detected_all_result[code])
+
+            if (detected_all_result[code] == right_count_level){
+                var $node = null, canvas = Quagga.canvas.dom.image;
+                $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
+                $node.find("img").attr("src", canvas.toDataURL());
+                $node.find("h4.code").html(code);
+                $("#result_strip ul.thumbnails").prepend($node); 
+                console.log('添加一个',code,detected_all_result[code])
+            }
         }
     });
 

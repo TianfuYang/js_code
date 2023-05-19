@@ -330,7 +330,7 @@ $(function() {
     });
     
     // 控制一下正确率 当同一个码被识别出right_count_level 次才被添加
-    var right_count_level = 5
+    var right_count_level = 3
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
 
@@ -349,6 +349,7 @@ $(function() {
                 $node.find("h4.code").html(code);
                 $("#result_strip ul.thumbnails").prepend($node); 
                 console.log('添加一个',code,detected_all_result[code])
+                detected_all_result = {};
             }
         }
     });

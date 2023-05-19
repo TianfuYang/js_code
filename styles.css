@@ -49,12 +49,12 @@ footer {
   padding: 0px;
 }
 
-@media (max-width: 603px) {
+
 #interactive.viewport {
-  width: 100%;
+  width: 375px;
   height: 100%;
 }
-}
+
 /*#interactive.viewport canvas, video {
   float: left;
   width: 640px;

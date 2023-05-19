@@ -15,25 +15,27 @@
   <body>
       <header>
           <div class="headline">
-              <h1>JavaScript</h1>
-              <h2>高级条形码扫描仪</h2>
-              <button><a href="https://thankful-water-0f47cf810.3.azurestaticapps.net/index2.html">图片上传</a></button>
+              <h2>JS条形码扫描仪</h2>
+              <p>本操作需要摄像权限，识别后结果会在下方展示</p>
+              <button><a href="https://thankful-water-0f47cf810.3.azurestaticapps.net/index2.html" style="text-decoration: none;color: black">图片识别</a></button>
           </div>
       </header>
+    <div id="interactive" class="viewport" style="width: 100%;height: 100%;margin: 0;"></div>
+    <div id="result_strip">
+        <ul class="thumbnails"></ul>
+        <ul class="collector"></ul>
+    </div>
     <section id="container" class="container">
-        <h3>本操作需要同意调用摄像头权限</h3>
-        <p>摄像头打开后即可开始实时识别，结果会在下方展示
-            如果识别没有结果，建议下方切换识别条码类型
-
-         </p>
+        <h3>识别模式设置</h3>
+        <p>如果识别没有结果，建议切换下方识别条码类型</p>
         <div class="controls">
-            <fieldset class="input-group">
-                <button class="stop">Stop</button>
-            </fieldset>
+            <!-- <fieldset class="input-group"> -->
+                <!-- <button class="stop">停止</button> -->
+            <!-- </fieldset> -->
             <fieldset class="reader-config-group">
                 <label>
                     <span>条码类型</span>
-                    <select name="decoder_readers">
+                    <select id = 'select_id' name="decoder_readers">
                         <option value="code_128" selected="selected">设备码</option>
                         <option value="ean">商品码</option>
                         <option value="code_39">Code 39</option>
@@ -52,9 +54,9 @@
                     <span>分辨率（长边）</span>
                     <select name="input-stream_constraints">
                         <option value="320x240">320px</option>
-                        <option selected="selected" value="640x480">640px</option>
+                        <option value="640x480">640px</option>
                         <option value="800x600">800px</option>
-                        <option value="1280x720">1280px</option>
+                        <option selected="selected" value="1280x720" >1280px</option>
                         <option value="1600x960">1600px</option>
                         <option value="1920x1080">1920px</option>
                     </select>
@@ -98,12 +100,8 @@
                 </label>
             </fieldset>
         </div>
-      <div id="result_strip">
-        <ul class="thumbnails"></ul>
-        <ul class="collector"></ul>
-      </div>
-      <div id="interactive" class="viewport"></div>
     </section>
+    
           <footer>
         <p>
           &copy; re-creation by ❤️  Langtaosanqian

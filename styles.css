@@ -43,7 +43,7 @@ footer {
 #container {
   width: 640px;
   margin: 20px auto;
-  padding: 10px;
+  padding: 0px;
 }
 
 #interactive.viewport {
@@ -205,8 +205,8 @@ i.icon-24-scan {
 @media (max-width: 603px) {
 
   #container {
-    width: 300px;
-    margin: 10px auto;
+    width: 370px;
+    margin: 0px 0;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -238,7 +238,7 @@ i.icon-24-scan {
 
 
   #interactive.viewport canvas, video {
-/*     margin-top: -50px; */
+    margin-top: -50px;
     width: 300px;
     height: 400px;
   }

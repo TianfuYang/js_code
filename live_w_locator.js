@@ -331,25 +331,30 @@ $(function() {
     
     // 控制一下正确率 当同一个码被识别出right_count_level 次才被添加
     var right_count_level = 3
+    var current_all_result = {}
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
 
-        if (undefined == detected_all_result[code]){
-            console.log(222,undefined == detected_all_result[code],detected_all_result[code])
-            detected_all_result[code] = 1   
+        if (undefined == current_all_result[code]){
+            current_all_result[code] = 1   
+            console.log(222,undefined == current_all_result[code],code,current_all_result)
+            
 
         }else{
-            detected_all_result[code] = detected_all_result[code]+1
-            console.log('当前情况：',code,detected_all_result[code])
+            current_all_result[code] = current_all_result[code]+1
 
-            if (detected_all_result[code] == right_count_level){
+            if (current_all_result[code] == right_count_level && undefined == detected_all_result[code]){
+                console.log('当前情况：',code,current_all_result[code])
                 var $node = null, canvas = Quagga.canvas.dom.image;
                 $node = $('<li><div class="thumbnail"><div class="imgWrapper"><img /></div><div class="caption"><h4 class="code"></h4></div></div></li>');
                 $node.find("img").attr("src", canvas.toDataURL());
                 $node.find("h4.code").html(code);
                 $("#result_strip ul.thumbnails").prepend($node); 
-                console.log('添加一个',code,detected_all_result[code])
-                detected_all_result = {};
+                console.log('添加一个',code,current_all_result[code])
+                current_all_result = {};
+                detected_all_result[code] = canvas.toDataURL()
+                console.log('添加完之后的对象清空了吗？',code,current_all_result)
+                console.log('添加完之后的对象detected_all_result',code,detected_all_result)
             }
         }
     });

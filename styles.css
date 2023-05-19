@@ -27,7 +27,7 @@ header .headline {
 header .headline h1 {
   color: #FFDD69;
   font-size: 3em;
-  margin: 0;
+  margin-bottom: 0;
 }
 
 header .headline h2 {
@@ -35,41 +35,31 @@ header .headline h2 {
 }
 
 footer {
-  background: #ffc600;
-  color: #0A4DB7;
-  padding: 1em 3em 1em;
-  position: absolute;
-  /*bottom: 0;*/
-  /*width: 100%;*/
+  background: #0A4DB7;
+  color: #6C9CE8;
+  padding: 1em 2em 2em;
 }
 
 #container {
-  width: 100%;
+  width: 640px;
   margin: 20px auto;
-  padding: 0px;
+  padding: 10px;
 }
-
 
 #interactive.viewport {
-  width: 100%;
-  height: 100%;
-}
-
-/*#interactive.viewport canvas, video {
-  float: left;
   width: 640px;
   height: 480px;
-}*/
+}
+
 
 #interactive.viewport canvas, video {
   float: left;
-  width: 100%;
-  height: 100%;
+  width: 640px;
+  height: 480px;
 }
 
 #interactive.viewport canvas.drawingBuffer, video.drawingBuffer {
-  /*margin-left: -640px;*/
-  margin-left: -100%;
+  margin-left: -640px;
 }
 
 .controls fieldset {
@@ -215,7 +205,7 @@ i.icon-24-scan {
 @media (max-width: 603px) {
 
   #container {
-    width: 100%;
+    width: 300px;
     margin: 10px auto;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -248,14 +238,15 @@ i.icon-24-scan {
 
 
   #interactive.viewport canvas, video {
-    width: 100%;
-    height: 100%;
+    margin-top: -50px;
+    width: 300px;
+    height: 400px;
   }
 
- /* #interactive.viewport canvas.drawingBuffer, video.drawingBuffer {
+  #interactive.viewport canvas.drawingBuffer, video.drawingBuffer {
     margin-left: -300px;
   }
-*/
+
 
   #result_strip {
     margin-top: 5px;
